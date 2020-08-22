@@ -1,3 +1,5 @@
+import json
+
 import tornado.web
 import tornado.ioloop
 import tornado.options
@@ -53,9 +55,82 @@ class IndexHandler(tornado.web.RequestHandler):
         self.write('<h3>我是DELETE请求方式</h3>')
 
 
+class SearchHandler(tornado.web.RequestHandler):
+
+    mapper = {
+        'python': 'Python First',
+        'java': 'Java Second',
+        'H5': 'HTML5'
+    }
+
+    def get(self):
+        html = """
+            <h3>搜索%s结果</h3>
+            <p>
+                %s
+            </p>
+        """
+        wd = self.get_query_argument('wd')
+        result = self.mapper.get(wd)
+
+        # self.write(html % (wd, result))
+        resp_data = {
+            'wd': wd,
+            'result': result
+        }
+        self.write(json.dumps(resp_data))
+        # 设置响应状态码
+        self.set_status(200)
+        # 设置响应头的数据类型
+        self.set_header('Content-Type', 'application/json;charset=utf-8')
+
+        # cookie操作
+        self.set_cookie('wd', wd)
+
+
+class CookieHandler(tornado.web.RequestHandler):
+    def get(self):
+        # 验证参数中是否存在 name?
+        if self.request.arguments.get('name'):
+            # 从查询参数中读取Cookie的名称
+            name = self.get_query_argument('name')
+
+            # 从cookie中获取name的对象或值
+            value = self.get_cookie(name)
+            self.write(value)
+        else:
+            # 查看所有的cookie
+            cookies: dict = self.request.cookies
+            html = '<ul>%s<ul>'
+            ls = []
+            for key in cookies:
+                ls.append('<li>%s: %s</li>' % (key, self.get_cookie(key)))
+
+            html = ('显示所有的cookie' + html % ''.join(ls))
+            html += """
+                <form method="post">
+                    <input name="name" placeholder="请输入cookie的名称">
+                    <button>提交</button>
+                </form>
+            """
+
+            self.write(html)
+
+    def post(self):
+        name = self.get_argument('name')
+        if self.request.cookies.get(name, None):
+            # 存在的cookie
+            self.clear_cookie(name)
+            self.write('<h3 style="color:green">删除 %s 成功</h3>' % name)
+        else:
+            self.write('<h3 style="color:red">删除 %s 失败，该cookie不存在</h3>' % name)
+
+
 def make_app():
     return tornado.web.Application([
-        ('/', IndexHandler)
+        ('/', IndexHandler),
+        ('/search', SearchHandler),
+        ('/cookie', CookieHandler)
     ], default_host=tornado.options.options.host)
 
 
