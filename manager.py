@@ -125,12 +125,61 @@ class CookieHandler(tornado.web.RequestHandler):
         else:
             self.write('<h3 style="color:red">删除 %s 失败，该cookie不存在</h3>' % name)
 
+        self.redirect('/cookie')    # 重定向
+
+
+class OrderHandler(tornado.web.RequestHandler):
+
+    goods = [
+        {
+            'id': 1,
+            'name': 'Python高级开发',
+            'author': 'crayon',
+            'price': 9999
+        },
+        {
+            'id': 2,
+            'name': 'Artificial Intelligence',
+            'author': 'crayon',
+            'price': 9999
+        },
+    ]
+
+    action_map = {
+        1: '取消订单',
+        2: '再次购买',
+        3: '评价'
+    }
+
+    def query(self, order_id):
+        for item in self.goods:
+            if item.get('id') == order_id:
+                return item
+
+    def get(self, order_id, action_code):
+        self.write('订单查询')
+        html = """
+            <p>
+                商品编号: %s
+            </p>
+            <p>
+                商品名称: %s
+            </p>
+            <p>
+                商品价格: %s
+            </p>
+        """
+        goods = self.query(int(order_id))
+        self.write(html % (goods.get('id'), goods.get('name'), goods.get('price')))
+        self.write(self.action_map.get(int(action_code)))
+
 
 def make_app():
     return tornado.web.Application([
         ('/', IndexHandler),
         ('/search', SearchHandler),
-        ('/cookie', CookieHandler)
+        ('/cookie', CookieHandler),
+        (r'/order/(?P<action_code>\d+)/(?P<order_id>\d+)', OrderHandler),
     ], default_host=tornado.options.options.host)
 
 
