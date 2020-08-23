@@ -46,3 +46,31 @@ class TestCookieRequest(TestCase):
             'name': 'token'
         })
         print(resp)
+
+
+class TestOrderRequst(TestCase):
+    url = 'http://localhost:8000/order/3/1'
+
+    def test_get(self):
+        resp = requests.get(self.url)
+        print(resp.text)
+
+    def test_post(self):
+        resp = requests.post(self.url)
+        print(resp.text)
+
+
+class TestUserRequest(TestCase):
+    url = 'http://localhost:8000/user'
+
+    def test_login(self):
+        # 上传json数据
+        resp = requests.get(self.url,
+                            json={
+                                'name': 'crayon',
+                                'pwd': '333'
+        })
+        print(resp.text)
+
+        # 读取响应的json数据
+        print(resp.json())
