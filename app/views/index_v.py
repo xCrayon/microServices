@@ -4,6 +4,17 @@ from tornado.web import RequestHandler
 
 class IndexHandler(RequestHandler):
     def get(self):
+        data = {
+            'msg': 'Hi,Template!',
+            'error_msg': None,
+            'age': 20,
+            'menus': ['主页', '最新推荐', '热门话题', '个人中心'],
+            'code': "<h3>hi, code</h3>"
+        }
+        self.render('index.html',
+                    **data)
+
+    def post(self):
         # 1. 请求参数读取
         wd = self.get_argument('wd')
         print(wd)
@@ -30,7 +41,7 @@ class IndexHandler(RequestHandler):
 
         self.write('<h3>我是主页</h3>')
 
-    def post(self):
+    def put(self):
         # 新增数据
         # 读取表单参数
         # name = self.get_argument('name')
@@ -44,8 +55,3 @@ class IndexHandler(RequestHandler):
 
         self.write('<h3>我是POST请求方式: %s %s %s</h3>' % (name, city, wd))
 
-    def put(self):
-        self.write('<h3>我是PUT请求方式</h3>')
-
-    def delete(self):
-        self.write('<h3>我是DELETE请求方式</h3>')

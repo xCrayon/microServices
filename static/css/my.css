@@ -1,0 +1,62 @@
+.error{
+    color: red;
+}
+
+.right{
+    color: green;
+}
+
+nav ul,li{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul{
+    background-color: lightblue;
+}
+
+nav li{
+    float: left;
+    padding: 5px;
+}
+
+nav li:hover{
+    border: 1px solid green;
+    border-radius: 5px;
+    background-color: greenyellow;
+}
+
+nav ul:after{
+    content: "";
+    display: block;
+    height: 0;
+    clear: both;
+    overflow: hidden;
+}
+
+#left{
+    position: absolute;
+    top: 50px;
+    left: 0;
+    margin: 10px;
+    display: inline-block;
+    width: 20%;
+    height: 800px;
+    border: 1px solid cadetblue;
+}
+
+#right{
+    top: 20px;
+    margin-left: 20%;
+    display: inline-block;
+    position: relative;
+    background: lightskyblue;
+    width: 100%;
+    height: 800px;
+}
+
+#right iframe{
+    width: 100%;
+    height: 100%;
+}

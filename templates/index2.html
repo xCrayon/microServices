@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index Page</title>
+    <link rel="stylesheet" href="{{ static_url('css/my.css') }}">
+</head>
+<body>
+<h1>我是主页</h1>
+
+<nav>
+    <ul>
+        {% for menu in menus %}
+            <li>{{ menu }}</li>
+        {% end %}
+    </ul>
+</nav>
+
+<p>
+    {{ msg }}
+</p>
+<p>
+    {{ 'hi, crayon'[-6:] }}
+</p>
+<p>
+    {{ len('hi, crayon') }}
+</p>
+<p>
+    {{ ','.join([ str(x**2) for x in range(10)] ) }}
+</p>
+
+<p>
+    {% if error_msg %}
+        <span class="error">{{ error_msg }}</span>
+    {% else%}
+        <span class="right">right place</span>
+    {% end %}
+</p>
+
+<p>
+    {% if age<18 %}
+        <span class="error">未成年禁止入内</span>
+    {% elif age>60 %}
+        <span class="error">老年人禁止入内</span>
+    {% else %}
+        <span class="right">Permission Accessed</span>
+    {% end %}
+</p>
+
+<p>
+    <textarea>{{ code }}</textarea>
+</p>
+<p>
+    <script>
+        document.write('{{ code }}')
+    </script>
+</p>
+</body>
+</html>
